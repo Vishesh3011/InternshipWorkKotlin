@@ -40,6 +40,7 @@ fun main(args: Array<String>) {
         mutableListOf(Address(1, "Galaxy"), Address(2, "Earth")),
         listOf("Eternal")
     )
+
     person.listAllContact()
 
     person.showGroupMembers("Human")

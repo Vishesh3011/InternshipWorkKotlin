@@ -1,22 +1,25 @@
-interface contact{
+interface ListOfContacts{
     val contactList: MutableList<Contact>
-        get() = mutableListOf<Contact>()
 }
-interface add{
+interface AddContactToTheList{
     fun addContact(id: String, name: String, phone: Phone, address: List<Address>, group: List<String>)
 }
 
-interface display{
+interface DisplayTheListOfContacts{
     fun listAllContact()
     fun showGroupMembers(species: String)
 }
 
-interface delete{
+interface DeleteAContactFromTheList{
     fun deleteContact(name: String)
 }
 
-interface search{
+interface SearchContactInTheListByName{
     fun searchContact(name: String): String
+}
+
+interface Group{
+    val groups: MutableMap<String, MutableList<String>>
 }
 
 data class Contact(
@@ -28,21 +31,16 @@ data class Contact(
 )
 
 data class Address(
-    val id: Int,
     val street: String
 )
 
-data class Phone(
+class Phone(
     val mobile: String? = null,
     val work: String? = null,
     val telephone: String? = null
 )
 
-interface Group{
-    val groups: MutableMap<String, MutableList<String>>
-}
-
-class addContact: contact, add, Group{
+interface AddContactToTheListListOfContacts: ListOfContacts, AddContactToTheList, Group{
     override fun addContact(id:String, name: String, phone: Phone, address: List<Address>, group: List<String>) {
         contactList.add(Contact(id, name, phone, address, group))
         for(i in group){
@@ -60,7 +58,7 @@ class addContact: contact, add, Group{
     }
 }
 
-interface deleteContact: contact, delete{
+interface DeleteAContactFromTheListListOfContacts: ListOfContacts, DeleteAContactFromTheList{
     override fun deleteContact(name: String) {
         for((index, element) in contactList.withIndex()){
             if(name == element.name) {
@@ -73,7 +71,7 @@ interface deleteContact: contact, delete{
     }
 }
 
-interface searchContact: contact, search{
+interface SearchAContactInTheListByNameListOfContacts: ListOfContacts, SearchContactInTheListByName{
     override fun searchContact(name: String): String {
         for(index in contactList){
             if(index.name == name)
@@ -83,13 +81,14 @@ interface searchContact: contact, search{
     }
 }
 
-interface listContacts: contact, display, Group(){
+interface ListContacts: ListOfContacts, DisplayTheListOfContacts, Group{
     override fun listAllContact() {
         contactList.forEach{
             println("ID: ${it.id}")
             println("Name: ${it.name}")
             println("Phone:")
-            println("Mobile: ${it.phone.mobile} Work: ${it.phone.work} Telephone: ${it.phone.telephone}")
+//            println("Mobile: ${it.phone.mobile} Work: ${it.phone.work} Telephone: ${it.phone.telephone}")
+            println(it.phone)
             println("Addresses:")
             for((index, element) in it.address.withIndex()){
                 println("Address ${index + 1}: ${element.street}")
@@ -107,4 +106,7 @@ interface listContacts: contact, display, Group(){
     }
 }
 
-class Contact: addContact
+class Contacts : AddContactToTheListListOfContacts, DeleteAContactFromTheListListOfContacts, ListContacts, SearchAContactInTheListByNameListOfContacts, Group, ListOfContacts{
+    override val groups = mutableMapOf<String, MutableList<String>>()
+    override val contactList = mutableListOf<Contact>()
+}

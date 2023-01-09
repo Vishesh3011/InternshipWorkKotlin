@@ -1,5 +1,3 @@
-import java.util.UUID
-
 interface AddressBook{
     fun addContact(id: String, name: String, phone: Phone, address: List<Address>, group: List<String>)
     fun listAllContact()
